@@ -11,4 +11,5 @@ add_executable(RayTracer main.c
         lib/ray.c
         lib/ray.h
         shape/sphere.c
+        shape/sphere.h
 )

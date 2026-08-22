@@ -130,48 +130,6 @@ void PrintFrameVectors (const CameraSpec *spec) {
     vec3print("top_left_pixel", spec->top_left_pixel);
 }
 
-double SolveQuadratic_SmallestSolution (const double A, const double B, const double C) {
-    const double disc = B*B - 4*A*C;
-    const double sol_1 = (-B + sqrt(disc)) / (2*A);
-    const double sol_2 = (-B - sqrt(disc)) / (2*A);
-    if (sol_1 > sol_2) return sol_2;
-    return sol_1;
-}
-
-// Collisions and detections
-double HitsSphere (const Sphere s, const Ray r) {
-    // for some position vector P, sits on the sphere's surface if P is at distance r, radius from C.
-    // such that, |P-C| = r, if C is the position vector of the sphere and r is the radius.
-
-    // A ray has position vector R for some R = O + tD, if O is the position vector of the origin
-    // and D is the unit direction vector. In some sense, a ray is a "line" across our three
-    // dimensions.
-
-    // We want to know if the R sits on the sphere's surface, so we substitute R -> P, P = R.
-    // |O+tD-C| = r
-    // (square both sides): |O+tD-C|^2 = r^2
-    // (which is equivalent to): (O+tD-C)(O+tD-C) = r^2
-    // (let vector K = O-C): (K+tD)(K+tD) = r^2
-    // K^2 + 2t KD + t^2 D^2 = r^2
-    // (1): D^2 t^2 + 2KD t + K^2 - r^2 = 0 --> this is a quadratic in terms of t.
-
-    // We use dot product to multiply vectors together, this turns them into scalars again.
-    // discriminant: b^2-4ac: (2*K dot D)^2 - 4(D dot D)(K dot K-r^2)
-    // if the equation (1) has one or more solutions, then the sphere gets hit by the ray.
-
-    const Vec3 K = vec3sub(r.origin, s.origin);
-    const double Coeff_A = vec3dot(r.direction, r.direction);
-    const double Coeff_B = 2 * vec3dot(K, r.direction);
-    const double Coeff_C = vec3dot(K, K) - s.radius * s.radius;
-    const double discriminant = Coeff_B*Coeff_B - 4*Coeff_A*Coeff_C;
-    if (discriminant < 0) return -1;
-    const double t = SolveQuadratic_SmallestSolution(Coeff_A, Coeff_B, Coeff_C);
-    if (t < 0) return -1;
-    return t;
-}
-
-
-
 // Ray utilities
 Ray GetRayOfPixel (const Camera cam, const CameraSpec *spec, const int pixel_X, const int pixel_Y) {
     const Vec3 right = vec3muls(spec->pixel_delta_right, pixel_X);
