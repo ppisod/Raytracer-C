@@ -7,8 +7,6 @@
 
 #include <stdio.h>
 
-static const Vec3 UP = (Vec3) {0, 1, 0};
-
 void vec3print (char name[], Vec3 vec) {
     printf("%s: {%f, %f, %f} \n", name, vec.x, vec.y, vec.z);
 }

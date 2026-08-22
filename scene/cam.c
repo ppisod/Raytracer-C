@@ -8,6 +8,8 @@
 
 #include "scene.h"
 
+#include "../lib/ray.h"
+
 static const double PI = 3.14159265358979323846264338327950288;
 
 double Rad (const double Deg) {
@@ -15,7 +17,7 @@ double Rad (const double Deg) {
 }
 
 double GetAspectRatio (const SceneInfo info) {
-    return (double) info.ImageDimensions.x / info.ImageDimensions.x;
+    return (double) info.ImageDimensions.x / info.ImageDimensions.y;
 }
 
 void GetBasisVectors (const SceneInfo info, const Camera cam, CameraSpec *spec) {
@@ -57,6 +59,14 @@ void GetFrameVectors (const Camera cam, CameraSpec *spec) {
             0.5
         )
     );
+}
+
+Ray GetRayOfPixel (const Camera cam, const CameraSpec *spec, const int pixel_X, const int pixel_Y) {
+    const Vec3 right = vec3muls(spec->pixel_delta_right, pixel_X);
+    const Vec3 down = vec3muls(spec->pixel_delta_down, pixel_Y);
+    const Vec3 offset = vec3add(right, down);
+    const Vec3 pixel_center = vec3add(spec->top_left_pixel, offset);
+    return (Ray) {cam.pos, vec3sub(pixel_center, cam.pos)};
 }
 
 void Camera_DoAll (const SceneInfo info, const Camera cam, CameraSpec *spec) {

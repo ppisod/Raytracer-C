@@ -8,6 +8,7 @@
 #include "scene.h"
 #include "../lib/vec3.h"
 #include "../lib/vec2.h"
+#include "../lib/ray.h"
 
 typedef struct {
     Vec3 pos;
@@ -38,5 +39,6 @@ void GetViewportSize(SceneInfo info, Camera cam, CameraSpec *spec);
 void GetPixelDeltas(SceneInfo info, Camera cam, CameraSpec *spec);
 void GetFrameVectors(Camera cam, CameraSpec *spec);
 void Camera_DoAll(SceneInfo info, Camera cam, CameraSpec *spec);
+Ray GetRayOfPixel (Camera cam, const CameraSpec *spec, int pixel_X, int pixel_Y);
 
 #endif //RAYTRACER_CAM_H

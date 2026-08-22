@@ -7,6 +7,8 @@
 #include <stdbool.h>
 #include "../lib/vec3.h"
 #include "../lib/vec2.h"
+#include "../lib/ray.h"
+#include "../shape/sphere.h"
 
 typedef struct {
     bool Hit;
@@ -18,5 +20,7 @@ typedef struct {
 typedef struct {
     Vec2 ImageDimensions;
 } SceneInfo;
+
+Vec3 RayColor (const Sphere *spheres, int count, Ray r);
 
 #endif //RAYTRACER_SCENE_H
