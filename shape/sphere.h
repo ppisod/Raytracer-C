@@ -6,6 +6,7 @@
 #define RAYTRACER_SPHERE_H
 
 #include "../lib/vec3.h"
+#include "../lib/ray.h"
 
 typedef struct {
     Vec3 origin;
@@ -13,5 +14,6 @@ typedef struct {
 } Sphere;
 
 double RayHitsSphere (Sphere s, Ray r);
+Vec3 RayHitsSphere_Normal (Sphere s, Ray r, double t);
 
 #endif //RAYTRACER_SPHERE_H

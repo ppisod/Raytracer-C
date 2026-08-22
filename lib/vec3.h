@@ -7,6 +7,7 @@
 typedef struct {
     double x, y, z;
 } Vec3;
+static const Vec3 UP;
 /* lib/vec3.c */
 void vec3print(char name[], Vec3 vec);
 Vec3 vec3add(Vec3 a, Vec3 b);

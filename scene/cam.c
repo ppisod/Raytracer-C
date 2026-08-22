@@ -1,0 +1,66 @@
+//
+// Created by JackL on 8/22/26.
+//
+
+#include "cam.h"
+
+#include <math.h>
+
+#include "scene.h"
+
+static const double PI = 3.14159265358979323846264338327950288;
+
+double Rad (const double Deg) {
+    return Deg * PI / 180.0;
+}
+
+double GetAspectRatio (const SceneInfo info) {
+    return (double) info.ImageDimensions.x / info.ImageDimensions.x;
+}
+
+void GetBasisVectors (const SceneInfo info, const Camera cam, CameraSpec *spec) {
+    spec->back = vec3u(vec3sub(cam.pos, cam.looking_at)); // normalized
+    spec->right = vec3u(vec3cross(UP, spec->back)); // normalized
+    spec->up = vec3cross(spec->back, spec->right); // therefore normalized
+}
+
+void GetViewportSize (const SceneInfo info, const Camera cam, CameraSpec *spec) {
+    const double focal_length = vec3len(vec3sub(cam.pos, cam.looking_at));
+    spec->focal_length = focal_length;
+    const double h = tan(Rad(cam.deg_vfov) / 2);
+    const double H = 2.0 * h * focal_length;
+    const double W = H * GetAspectRatio(info);
+    spec->viewport = (Vec2) {W, H};
+}
+
+void GetPixelDeltas (const SceneInfo info, const Camera cam, CameraSpec *spec) {
+    GetBasisVectors(info, cam, spec);
+    spec->pixel_delta_right = vec3muls(spec->right, spec->viewport.x / info.ImageDimensions.x);
+    spec->pixel_delta_down = vec3muls(spec->up, -spec->viewport.y / info.ImageDimensions.y);
+}
+
+void GetFrameVectors (const Camera cam, CameraSpec *spec) {
+    spec->center = vec3sub(cam.pos, vec3muls(spec->back, spec->focal_length));
+    spec->width_edge = vec3muls(spec->right, spec->viewport.x);
+    spec->height_edge = vec3muls(spec->up, -spec->viewport.y);
+    spec->upper_left = vec3sub(
+        vec3sub(
+            spec->center,
+            vec3muls(spec->width_edge, 0.5)
+        ),
+        vec3muls(spec->height_edge, 0.5)
+    );
+    spec->top_left_pixel = vec3add(
+        spec->upper_left,
+        vec3muls(
+            vec3add(spec->pixel_delta_right, spec->pixel_delta_down),
+            0.5
+        )
+    );
+}
+
+void Camera_DoAll (const SceneInfo info, const Camera cam, CameraSpec *spec) {
+    GetViewportSize(info, cam, spec);
+    GetPixelDeltas(info, cam, spec);
+    GetFrameVectors(cam, spec);
+}

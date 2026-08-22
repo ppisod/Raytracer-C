@@ -12,4 +12,8 @@ add_executable(RayTracer main.c
         lib/ray.h
         shape/sphere.c
         shape/sphere.h
+        scene/scene.c
+        scene/scene.h
+        scene/cam.c
+        scene/cam.h
 )

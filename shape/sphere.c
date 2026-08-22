@@ -7,8 +7,7 @@
 #include "../lib/ray.h"
 #include "sphere.h"
 
-double SolveQuadratic_SmallestSolution (const double A, const double B, const double C) {
-    const double disc = B*B - 4*A*C;
+double SolveQuadratic_SmallestSolution (const double A, const double B, const double disc) {
     const double sol_1 = (-B + sqrt(disc)) / (2*A);
     const double sol_2 = (-B - sqrt(disc)) / (2*A);
     if (sol_1 > sol_2) return sol_2;
@@ -22,7 +21,12 @@ double RayHitsSphere (const Sphere s, const Ray r) {
     const double Coeff_C = vec3dot(K, K) - s.radius * s.radius;
     const double discriminant = Coeff_B*Coeff_B - 4*Coeff_A*Coeff_C;
     if (discriminant < 0) return -1;
-    const double t = SolveQuadratic_SmallestSolution(Coeff_A, Coeff_B, Coeff_C);
+    const double t = SolveQuadratic_SmallestSolution(Coeff_A, Coeff_B, discriminant);
     if (t < 0) return -1;
     return t;
+}
+
+Vec3 RayHitsSphere_Normal (const Sphere s, const Ray r, const double t) {
+    const Vec3 P = vec3add(r.origin, vec3muls(r.direction, t));
+    return vec3u(vec3sub(P, s.origin));
 }
