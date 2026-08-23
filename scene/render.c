@@ -11,7 +11,7 @@ Pixel Render (const SceneInfo info, const int x, const int y, const CameraSpec *
     for (int i = 0; i < info.AntiAliasSamples; i++) {
         const Vec2 Offset = {RandomDouble()-0.5, RandomDouble()-0.5};
         const Ray current_ray = GetRayOfPixel(cam, spec, Offset, x, y);
-        const Vec3 result_color = RayColor(10, scene, current_ray);
+        const Vec3 result_color = RayColor(6, scene, current_ray);
         total = vec3add(total, result_color);
     }
     total = vec3divs(total, info.AntiAliasSamples);

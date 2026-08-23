@@ -25,7 +25,7 @@ HitResult HitScene (const List scene, Ray r) {
     for (int i = 0; i < scene.len; i++) {
         const Sphere s = *(Sphere*) GetListElement_Ptr(scene, i);
         const double T = RayHitsSphere(s, r);
-        if (T > 0.001 && T < best.T) {
+        if (T > 0 && T < best.T) {
             best.Hit = true;
             best.T = T;
             best.HitPoint = vec3add(r.origin, vec3muls(r.direction, T));

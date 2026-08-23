@@ -50,6 +50,7 @@ int main(void) {
 
     Sphere spheres[] = {
         (Sphere) {{0, 0, 0}, 0.5},
+        (Sphere) {{1, -5, 0}, 3},
         (Sphere) {{0, -105, 0}, 100}
     };
 

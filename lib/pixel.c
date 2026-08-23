@@ -4,13 +4,15 @@
 
 #include "pixel.h"
 
+#include <math.h>
+
 #include "vec3.h"
 
 Pixel VecToPixel (const Vec3 color) {
     return (Pixel)
         {
-            (unsigned char) (color.x * 255.999),
-            (unsigned char) (color.y * 255.999),
-            (unsigned char) (color.z * 255.999)
+            (unsigned char) (sqrt(color.x) * 255.999),
+            (unsigned char) (sqrt(color.y) * 255.999),
+            (unsigned char) (sqrt(color.z) * 255.999)
         };
 }
