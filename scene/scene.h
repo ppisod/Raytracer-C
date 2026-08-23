@@ -25,6 +25,6 @@ typedef struct {
     int AntiAliasSamples;
 } SceneInfo;
 
-Vec3 RayColor(List scene, Ray r);
+Vec3 RayColor(int depth, List scene, Ray r);
 
 #endif //RAYTRACER_SCENE_H

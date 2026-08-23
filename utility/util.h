@@ -12,7 +12,7 @@ typedef struct {
 } List;
 
 static const double PI = 3.14159265358979323846264338327950288;
-double RandomDouble();
+double RandomDouble(void);
 double Rad(double Deg);
 
 char* GetListElement_Ptr (List l, int idx);

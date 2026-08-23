@@ -45,7 +45,7 @@ int WriteFile (const SceneInfo info, const List scene, const Camera cam, CameraS
 int main(void) {
     const Camera cam = (Camera) {(Vec3) {0.7, 0.7, 0.7}, (Vec3) {0, 0, 0}, 120};
     CameraSpec spec = (CameraSpec) {0};
-    const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}, 4};
+    const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}, 40};
     Camera_DoAll(info, cam, &spec);
 
     Sphere spheres[] = {

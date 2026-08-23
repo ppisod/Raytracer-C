@@ -25,7 +25,7 @@ HitResult HitScene (const List scene, Ray r) {
     for (int i = 0; i < scene.len; i++) {
         const Sphere s = *(Sphere*) GetListElement_Ptr(scene, i);
         const double T = RayHitsSphere(s, r);
-        if (T > 0 && T < best.T) {
+        if (T > 0.001 && T < best.T) {
             best.Hit = true;
             best.T = T;
             best.HitPoint = vec3add(r.origin, vec3muls(r.direction, T));
@@ -36,13 +36,20 @@ HitResult HitScene (const List scene, Ray r) {
     return best;
 }
 
-Vec3 RayColor (const List scene, const Ray r) {
+Vec3 RayColor (const int depth, const List scene, const Ray r) {
     const Vec3 unit = vec3u(r.direction);
     const double Vert = 0.5*(unit.y+1);
 
+    if (depth <= 0) {
+        return BLACK;
+    }
+
     const HitResult result = HitScene(scene, r);
+
     if (result.Hit == true) {
-        return vec3muls(vec3add(result.SurfaceNormal, WHITE), 0.5);
+        const Vec3 dir = vec3add(result.SurfaceNormal, vec3rand());
+        const Ray bounced = {result.HitPoint, dir};
+        return vec3muls(RayColor(depth - 1, scene, bounced), 0.5);
     }
 
     if (Vert < 0.45) {

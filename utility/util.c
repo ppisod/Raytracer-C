@@ -5,8 +5,8 @@
 #include "util.h"
 #include <stdlib.h>
 
-double RandomDouble () {
-    return (double) rand() / RAND_MAX + 1.0;
+double RandomDouble (void) {
+    return (double) rand() / (RAND_MAX + 1.0);
 }
 
 double Rad (const double Deg) {

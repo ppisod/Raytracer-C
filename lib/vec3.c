@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include "vec3.h"
+#include "../utility/util.h"
 
 #include <stdio.h>
 
@@ -86,4 +87,14 @@ void vec3u_inplace (Vec3 *a) {
     a->x /= len;
     a->y /= len;
     a->z /= len;
+}
+
+Vec3 vec3rand (void) {
+    loop: ;
+        const Vec3 p = (Vec3) {2*RandomDouble()-1, 2*RandomDouble()-1, 2*RandomDouble()-1};
+        const double len = vec3lensqrd(p);
+        if (len > 1e-160 && len <= 1.0) {
+            return vec3divs(p, sqrt(len));
+        }
+        goto loop;
 }
