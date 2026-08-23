@@ -16,12 +16,14 @@ const Vec3 SKY = {0.5, 0.7, 1.0};
 const Vec3 GRAY = {0.7, 0.7, 0.7};
 const Vec3 BLACK = {0, 0, 0};
 
-HitResult HitScene (const List scene, Ray r) {
+HitResult HitScene (const List scene, const Ray r) {
     HitResult best;
     best.Hit = false;
     best.T = INFINITY;
     best.SurfaceNormal = (Vec3) {0, 0, 0};
     best.HitPoint = (Vec3) {0, 0, 0};
+    best.Material = (Material) {Mat_Lambertian, {0, 0, 0}, 0};
+    best.Ray = r;
     for (int i = 0; i < scene.len; i++) {
         const Sphere s = *(Sphere*) GetListElement_Ptr(scene, i);
         const double T = RayHitsSphere(s, r);
@@ -30,6 +32,7 @@ HitResult HitScene (const List scene, Ray r) {
             best.T = T;
             best.HitPoint = vec3add(r.origin, vec3muls(r.direction, T));
             best.SurfaceNormal = RayHitsSphere_Normal(s, r, T);
+            best.Material = s.mat;
         }
     }
 
@@ -47,9 +50,18 @@ Vec3 RayColor (const int depth, const List scene, const Ray r) {
     const HitResult result = HitScene(scene, r);
 
     if (result.Hit == true) {
-        const Vec3 dir = vec3add(result.SurfaceNormal, vec3rand());
-        const Ray bounced = {result.HitPoint, dir};
-        return vec3muls(RayColor(depth - 1, scene, bounced), 0.5);
+        switch (result.Material.type) {
+            case Mat_Lambertian: ;
+                Vec3 dir = vec3add(result.SurfaceNormal, vec3rand());
+                Ray bounced = {result.HitPoint, dir};
+                return vec3muls(RayColor(depth - 1, scene, bounced), 0.5);
+            case Mat_Metal: ;
+                dir = vec3add(result.Ray.direction, vec3muls(result.SurfaceNormal, 2));
+                bounced = (Ray) {result.HitPoint, dir};
+                return vec3muls(RayColor(depth - 1, scene, bounced), 1-result.Material.fuzz);
+            default: ;
+                return BLACK;
+        }
     }
 
     if (Vert < 0.45) {

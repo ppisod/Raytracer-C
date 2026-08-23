@@ -48,10 +48,13 @@ int main(void) {
     const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}, 40};
     Camera_DoAll(info, cam, &spec);
 
+    Material albert = {Mat_Lambertian, {0, 0, 0}, 0};
+    Material metal = {Mat_Metal, {0, 0, 0}, 0.25};
+
     Sphere spheres[] = {
-        (Sphere) {{0, 0, 0}, 0.5},
-        (Sphere) {{1, -5, 0}, 3},
-        (Sphere) {{0, -105, 0}, 100}
+        (Sphere) {{0, 0, 0}, 0.5, albert},
+        (Sphere) {{1, -5, 0}, 3, metal},
+        (Sphere) {{0, -105, 0}, 100, albert}
     };
 
     const List list = {

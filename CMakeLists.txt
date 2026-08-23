@@ -22,4 +22,6 @@ add_executable(RayTracer main.c
         utility/util.h
         scene/render.c
         scene/render.h
+        texture/materials.c
+        texture/materials.h
 )

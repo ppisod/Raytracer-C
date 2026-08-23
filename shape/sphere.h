@@ -7,10 +7,12 @@
 
 #include "../lib/vec3.h"
 #include "../lib/ray.h"
+#include "../texture/materials.h"
 
 typedef struct {
     Vec3 origin;
     double radius;
+    Material mat;
 } Sphere;
 
 double RayHitsSphere (Sphere s, Ray r);
