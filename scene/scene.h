@@ -5,10 +5,13 @@
 #ifndef RAYTRACER_SCENE_H
 #define RAYTRACER_SCENE_H
 #include <stdbool.h>
+
 #include "../lib/vec3.h"
 #include "../lib/vec2.h"
 #include "../lib/ray.h"
 #include "../shape/sphere.h"
+#include "../utility/util.h"
+#include "../lib/pixel.h"
 
 typedef struct {
     bool Hit;
@@ -19,8 +22,9 @@ typedef struct {
 
 typedef struct {
     Vec2 ImageDimensions;
+    int AntiAliasSamples;
 } SceneInfo;
 
-Vec3 RayColor (const Sphere *spheres, int count, Ray r);
+Vec3 RayColor(List scene, Ray r);
 
 #endif //RAYTRACER_SCENE_H

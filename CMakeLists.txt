@@ -18,4 +18,8 @@ add_executable(RayTracer main.c
         scene/cam.h
         lib/pixel.c
         lib/pixel.h
+        utility/util.c
+        utility/util.h
+        scene/render.c
+        scene/render.h
 )

@@ -4,38 +4,43 @@
 
 #include "scene.h"
 #include "../lib/ray.h"
+#include "../lib/pixel.h"
 #include "../shape/sphere.h"
+#include "../utility/util.h"
 #include <math.h>
+
+#include <stdlib.h>
 
 const Vec3 WHITE = {1, 1, 1};
 const Vec3 SKY = {0.5, 0.7, 1.0};
 const Vec3 GRAY = {0.7, 0.7, 0.7};
 const Vec3 BLACK = {0, 0, 0};
 
-HitResult HitScene (const Sphere *spheres, int count, Ray r) {
+HitResult HitScene (const List scene, Ray r) {
     HitResult best;
     best.Hit = false;
     best.T = INFINITY;
     best.SurfaceNormal = (Vec3) {0, 0, 0};
     best.HitPoint = (Vec3) {0, 0, 0};
-    for (int i = 0; i < count; i++) {
-        double T = RayHitsSphere(spheres[i], r);
+    for (int i = 0; i < scene.len; i++) {
+        const Sphere s = *(Sphere*) GetListElement_Ptr(scene, i);
+        const double T = RayHitsSphere(s, r);
         if (T > 0 && T < best.T) {
             best.Hit = true;
             best.T = T;
             best.HitPoint = vec3add(r.origin, vec3muls(r.direction, T));
-            best.SurfaceNormal = RayHitsSphere_Normal(spheres[i], r, T);
+            best.SurfaceNormal = RayHitsSphere_Normal(s, r, T);
         }
     }
 
     return best;
 }
 
-Vec3 RayColor (const Sphere *spheres, int count, const Ray r) {
+Vec3 RayColor (const List scene, const Ray r) {
     const Vec3 unit = vec3u(r.direction);
     const double Vert = 0.5*(unit.y+1);
 
-    const HitResult result = HitScene(spheres, count, r);
+    const HitResult result = HitScene(scene, r);
     if (result.Hit == true) {
         return vec3muls(vec3add(result.SurfaceNormal, WHITE), 0.5);
     }

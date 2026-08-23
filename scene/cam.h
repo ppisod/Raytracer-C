@@ -39,6 +39,6 @@ void GetViewportSize(SceneInfo info, Camera cam, CameraSpec *spec);
 void GetPixelDeltas(SceneInfo info, Camera cam, CameraSpec *spec);
 void GetFrameVectors(Camera cam, CameraSpec *spec);
 void Camera_DoAll(SceneInfo info, Camera cam, CameraSpec *spec);
-Ray GetRayOfPixel (Camera cam, const CameraSpec *spec, int pixel_X, int pixel_Y);
+Ray GetRayOfPixel (Camera cam, const CameraSpec *spec, Vec2 offset, int pixel_X, int pixel_Y);
 
 #endif //RAYTRACER_CAM_H

@@ -7,7 +7,10 @@
 #include "lib/vec3.h"
 #include "lib/vec2.h"
 #include "scene/cam.h"
+#include "scene/render.h"
+#include "scene/scene.h"
 #include "shape/sphere.h"
+#include "utility/util.h"
 
 static const int Width = 600;
 static const int Height = 400;
@@ -20,7 +23,7 @@ Pixel DefaultImage_GetPixel (const int x, const int y, const int w, const int h)
 }
 
 // Main functions
-int WriteFile (const Sphere *scene, const int count, const Camera cam, CameraSpec *spec) {
+int WriteFile (const SceneInfo info, const List scene, const Camera cam, CameraSpec *spec) {
 
     FILE *f = fopen ("out.ppm", "w");
     if (!f) {perror("fopen failed"); return 1;}
@@ -29,10 +32,8 @@ int WriteFile (const Sphere *scene, const int count, const Camera cam, CameraSpe
 
     for (int y = 0; y < Height; y++) {
         for (int x = 0; x < Width; x++) {
-            const Ray current_ray = GetRayOfPixel(cam, spec, x, y);
-            const Vec3 result_color = RayColor(scene, count, current_ray);
-            const Pixel as_pixel = VecToPixel(result_color);
-            fprintf(f, "%d %d %d \n", as_pixel.r, as_pixel.g, as_pixel.b);
+            const Pixel p = Render(info, x, y, spec, cam, scene);
+            fprintf(f, "%d %d %d \n", p.r, p.g, p.b);
         }
     }
 
@@ -44,7 +45,7 @@ int WriteFile (const Sphere *scene, const int count, const Camera cam, CameraSpe
 int main(void) {
     const Camera cam = (Camera) {(Vec3) {0.7, 0.7, 0.7}, (Vec3) {0, 0, 0}, 120};
     CameraSpec spec = (CameraSpec) {0};
-    const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}};
+    const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}, 4};
     Camera_DoAll(info, cam, &spec);
 
     Sphere spheres[] = {
@@ -52,5 +53,11 @@ int main(void) {
         (Sphere) {{0, -105, 0}, 100}
     };
 
-    return WriteFile(spheres, sizeof(spheres)/sizeof(spheres[0]), cam, &spec);
+    const List list = {
+        spheres,
+        sizeof(spheres[0]),
+        sizeof(spheres)/sizeof(spheres[0])
+    };
+
+    return WriteFile(info, list, cam, &spec);
 }
