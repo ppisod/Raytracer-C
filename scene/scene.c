@@ -71,12 +71,14 @@ Vec3 RayColor (const int depth, const List scene, const Ray r) {
         switch (result.Material.type) {
             case Mat_Lambertian: ;
                 Vec3 dir = vec3add(result.SurfaceNormal, vec3rand());
-                Ray bounced = {result.HitPoint, dir};
+                Vec3 fuzzed = vec3add(dir, vec3muls(vec3rand(), result.Material.fuzz));
+                Ray bounced = {result.HitPoint, fuzzed};
                 return vec3mul(RayColor(depth - 1, scene, bounced), result.Material.albedo);
             case Mat_Metal: ;
                 dir = vec3reflect(result.Ray.direction, result.SurfaceNormal, 2);
-                bounced = (Ray) {result.HitPoint, dir};
-                return vec3muls(RayColor(depth - 1, scene, bounced), 1-result.Material.fuzz);
+                fuzzed = vec3add(dir, vec3muls(vec3rand(), result.Material.fuzz));
+                bounced = (Ray) {result.HitPoint, fuzzed};
+                return vec3mul(RayColor(depth - 1, scene, bounced), result.Material.albedo);
             default: ;
                 return BLACK;
         }

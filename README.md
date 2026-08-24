@@ -1,11 +1,12 @@
-# A raytracer in development in C
+# A raytracer in C
 ## Current features
-- Sphere objects & sky background
+- Plane & Sphere objects w sky background
+- Materials
 - Anti-aliasing
 
 ## Planned features
-- Materials
-- Different objects
+- Optimizing and using threads
+- Image textures
 
 ## Why
 Learn C and low level mechanics
