@@ -27,4 +27,5 @@ Vec3 vec3max (Vec3 a, Vec3 b);
 Vec3 vec3min (Vec3 a, Vec3 b);
 void vec3u_inplace(Vec3 *a);
 Vec3 vec3rand (void);
+Vec3 vec3reflect (Vec3 incident, Vec3 normal, double factor);
 #endif //RAYTRACER_VEC3_H

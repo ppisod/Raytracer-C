@@ -5,7 +5,7 @@
 #include "scene.h"
 #include "../lib/ray.h"
 #include "../lib/pixel.h"
-#include "../shape/sphere.h"
+#include "../shape/shape.h"
 #include "../utility/util.h"
 #include <math.h>
 
@@ -25,13 +25,31 @@ HitResult HitScene (const List scene, const Ray r) {
     best.Material = (Material) {Mat_Lambertian, {0, 0, 0}, 0};
     best.Ray = r;
     for (int i = 0; i < scene.len; i++) {
-        const Sphere s = *(Sphere*) GetListElement_Ptr(scene, i);
-        const double T = RayHitsSphere(s, r);
+        const Shape s = *(Shape*) GetListElement_Ptr(scene, i);
+        double T = 0;
+
+        switch (s.type) {
+            case Shape_Sphere: ;
+                T = RayHitsSphere(s.sphere, r);
+                break;
+            case Shape_Plane: ;
+                T = RayHitsPlane(s.plane, r);
+                break;
+        }
         if (T > 0 && T < best.T) {
             best.Hit = true;
             best.T = T;
             best.HitPoint = vec3add(r.origin, vec3muls(r.direction, T));
-            best.SurfaceNormal = RayHitsSphere_Normal(s, r, T);
+
+            switch (s.type) {
+                case Shape_Sphere: ;
+                    best.SurfaceNormal = RayHitsSphere_Normal(s.sphere, r, T);
+                    break;
+                case Shape_Plane: ;
+                    best.SurfaceNormal = RayHitsPlane_Normal(s.plane);
+                    break;
+            }
+
             best.Material = s.mat;
         }
     }
@@ -54,9 +72,9 @@ Vec3 RayColor (const int depth, const List scene, const Ray r) {
             case Mat_Lambertian: ;
                 Vec3 dir = vec3add(result.SurfaceNormal, vec3rand());
                 Ray bounced = {result.HitPoint, dir};
-                return vec3muls(RayColor(depth - 1, scene, bounced), 0.5);
+                return vec3mul(RayColor(depth - 1, scene, bounced), result.Material.albedo);
             case Mat_Metal: ;
-                dir = vec3add(result.Ray.direction, vec3muls(result.SurfaceNormal, 2));
+                dir = vec3reflect(result.Ray.direction, result.SurfaceNormal, 2);
                 bounced = (Ray) {result.HitPoint, dir};
                 return vec3muls(RayColor(depth - 1, scene, bounced), 1-result.Material.fuzz);
             default: ;

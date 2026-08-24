@@ -24,4 +24,8 @@ add_executable(RayTracer main.c
         scene/render.h
         texture/materials.c
         texture/materials.h
+        shape/plane.c
+        shape/plane.h
+        shape/shape.c
+        shape/shape.h
 )

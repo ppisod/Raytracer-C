@@ -98,3 +98,7 @@ Vec3 vec3rand (void) {
         }
         goto loop;
 }
+
+Vec3 vec3reflect (const Vec3 incident, const Vec3 normal, const double factor) {
+    return vec3sub(incident, vec3muls(vec3muls(normal, vec3dot(incident, normal)), factor));
+}

@@ -9,6 +9,7 @@
 #include "scene/cam.h"
 #include "scene/render.h"
 #include "scene/scene.h"
+#include "shape/shape.h"
 #include "shape/sphere.h"
 #include "utility/util.h"
 
@@ -43,24 +44,26 @@ int WriteFile (const SceneInfo info, const List scene, const Camera cam, CameraS
 }
 
 int main(void) {
-    const Camera cam = (Camera) {(Vec3) {0.7, 0.7, 0.7}, (Vec3) {0, 0, 0}, 120};
+    const Camera cam = (Camera) {(Vec3) {0.7, 0.7, 0.7}, (Vec3) {0, 0, 0}, 90};
     CameraSpec spec = (CameraSpec) {0};
     const SceneInfo info = (SceneInfo) {(Vec2) {Width, Height}, 40};
     Camera_DoAll(info, cam, &spec);
 
-    Material albert = {Mat_Lambertian, {0, 0, 0}, 0};
-    Material metal = {Mat_Metal, {0, 0, 0}, 0.25};
+    Material albert = {Mat_Lambertian, {0.6, 0.7, 0.9}, 0};
+    Material metal = {Mat_Metal, {0.8, 0.8, 0.8}, 0.25};
 
-    Sphere spheres[] = {
-        (Sphere) {{0, 0, 0}, 0.5, albert},
-        (Sphere) {{1, -5, 0}, 3, metal},
-        (Sphere) {{0, -105, 0}, 100, albert}
+
+    Shape scene[] = {
+        (Shape) {.type=Shape_Sphere, .mat=albert, .sphere=(Sphere) {{0, 0, 0}, 0.5}},
+        (Shape) {.type=Shape_Sphere, .mat=metal, .sphere=(Sphere) {{1, -3, 0}, 3}},
+        (Shape) {.type=Shape_Sphere, .mat=albert, .sphere=(Sphere) {{0, -105, 0}, 100}},
+        (Shape) {.type=Shape_Plane, .mat=metal, .plane=(Plane) {{0, 0, 0}, {0.7, 1.4, 1}, 0.9}}
     };
 
     const List list = {
-        spheres,
-        sizeof(spheres[0]),
-        sizeof(spheres)/sizeof(spheres[0])
+        scene,
+        sizeof(scene[0]),
+        sizeof(scene)/sizeof(scene[0])
     };
 
     return WriteFile(info, list, cam, &spec);
