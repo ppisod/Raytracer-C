@@ -16,3 +16,7 @@ double Rad (const double Deg) {
 char* GetListElement_Ptr (const List l, const int idx) {
     return (char*) l.data + idx * l.len_per_el;
 }
+
+char* GetPtrListElement_Ptr (const List *l, const int idx) {
+    return (char*) l->data + idx * l->len_per_el;
+}

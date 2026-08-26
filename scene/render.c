@@ -4,16 +4,18 @@
 
 #include "render.h"
 
+#include "cam.h"
 #include "scene.h"
 
-Pixel Render (const SceneInfo info, const int x, const int y, const CameraSpec *spec, const Camera cam, const List scene) {
+
+Pixel Render (const RenderInfo info) {
     Vec3 total = {0,0,0};
-    for (int i = 0; i < info.AntiAliasSamples; i++) {
+    for (int i = 0; i < info.info->AntiAliasSamples; i++) {
         const Vec2 Offset = {RandomDouble()-0.5, RandomDouble()-0.5};
-        const Ray current_ray = GetRayOfPixel(cam, spec, Offset, x, y);
-        const Vec3 result_color = RayColor(6, scene, current_ray);
+        const Ray current_ray = GetRayOfPixel(info, Offset);
+        const Vec3 result_color = RayColor(6, info.scene, current_ray);
         total = vec3add(total, result_color);
     }
-    total = vec3divs(total, info.AntiAliasSamples);
+    total = vec3divs(total, info.info->AntiAliasSamples);
     return VecToPixel(total);
 }

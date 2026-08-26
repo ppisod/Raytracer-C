@@ -16,5 +16,6 @@ double RandomDouble(void);
 double Rad(double Deg);
 
 char* GetListElement_Ptr (List l, int idx);
+char* GetPtrListElement_Ptr (const List *l, int idx);
 
 #endif //RAYTRACER_UTIL_H

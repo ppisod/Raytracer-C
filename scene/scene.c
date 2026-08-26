@@ -9,6 +9,8 @@
 #include "../utility/util.h"
 #include <math.h>
 
+#include "scene_types.h"
+
 #include <stdlib.h>
 
 const Vec3 WHITE = {1, 1, 1};
@@ -16,7 +18,7 @@ const Vec3 SKY = {0.5, 0.7, 1.0};
 const Vec3 GRAY = {0.7, 0.7, 0.7};
 const Vec3 BLACK = {0, 0, 0};
 
-HitResult HitScene (const List scene, const Ray r) {
+HitResult HitScene (const List *scene, const Ray r) {
     HitResult best;
     best.Hit = false;
     best.T = INFINITY;
@@ -24,9 +26,9 @@ HitResult HitScene (const List scene, const Ray r) {
     best.HitPoint = (Vec3) {0, 0, 0};
     best.Material = (Material) {Mat_Lambertian, {0, 0, 0}, 0};
     best.Ray = r;
-    for (int i = 0; i < scene.len; i++) {
-        const Shape s = *(Shape*) GetListElement_Ptr(scene, i);
-        double T = 0;
+    for (int i = 0; i < scene->len; i++) {
+        const Shape s = *(Shape*) GetPtrListElement_Ptr(scene, i);
+        double T      = 0;
 
         switch (s.type) {
             case Shape_Sphere: ;
@@ -57,7 +59,7 @@ HitResult HitScene (const List scene, const Ray r) {
     return best;
 }
 
-Vec3 RayColor (const int depth, const List scene, const Ray r) {
+Vec3 RayColor (const int depth, const List *scene, const Ray r) {
     const Vec3 unit = vec3u(r.direction);
     const double Vert = 0.5*(unit.y+1);
 

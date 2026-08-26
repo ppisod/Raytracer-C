@@ -4,8 +4,9 @@
 
 #ifndef RAYTRACER_RENDER_H
 #define RAYTRACER_RENDER_H
-#include "cam.h"
+#include "../lib/pixel.h"
+#include "scene_types.h"
 
-Pixel Render(SceneInfo info, int x, int y, const CameraSpec *spec, Camera cam, List scene);
+Pixel Render(RenderInfo info);
 
 #endif //RAYTRACER_RENDER_H

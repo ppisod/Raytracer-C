@@ -24,7 +24,7 @@ Pixel DefaultImage_GetPixel (const int x, const int y, const int w, const int h)
 }
 
 // Main functions
-int WriteFile (const SceneInfo info, const List scene, const Camera cam, CameraSpec *spec) {
+int WriteFile (const SceneInfo info, const List *scene, const Camera cam, CameraSpec *spec) {
 
     FILE *f = fopen ("out.ppm", "w");
     if (!f) {perror("fopen failed"); return 1;}
@@ -33,8 +33,12 @@ int WriteFile (const SceneInfo info, const List scene, const Camera cam, CameraS
 
     for (int y = 0; y < Height; y++) {
         for (int x = 0; x < Width; x++) {
-            const Pixel p = Render(info, x, y, spec, cam, scene);
+
+            const RenderInfo parameters = {x, y, &info, scene, &cam, spec};
+
+            const Pixel p = Render(parameters);
             fprintf(f, "%d %d %d \n", p.r, p.g, p.b);
+
         }
     }
 
@@ -66,5 +70,5 @@ int main(void) {
         sizeof(scene)/sizeof(scene[0])
     };
 
-    return WriteFile(info, list, cam, &spec);
+    return WriteFile(info, &list, cam, &spec);
 }

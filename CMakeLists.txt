@@ -28,4 +28,7 @@ add_executable(RayTracer main.c
         shape/plane.h
         shape/shape.c
         shape/shape.h
+        thread/thread_main.c
+        thread/thread_main.h
+        scene/scene_types.h
 )

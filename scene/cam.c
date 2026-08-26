@@ -6,8 +6,6 @@
 
 #include <math.h>
 
-#include "scene.h"
-
 #include "../lib/ray.h"
 #include "../utility/util.h"
 
@@ -15,7 +13,7 @@ double GetAspectRatio (const SceneInfo info) {
     return (double) info.ImageDimensions.x / info.ImageDimensions.y;
 }
 
-void GetBasisVectors (const SceneInfo info, const Camera cam, CameraSpec *spec) {
+void GetBasisVectors (const Camera cam, CameraSpec *spec) {
     spec->back = vec3u(vec3sub(cam.pos, cam.looking_at)); // normalized
     spec->right = vec3u(vec3cross(UP, spec->back)); // normalized
     spec->up = vec3cross(spec->back, spec->right); // therefore normalized
@@ -31,7 +29,7 @@ void GetViewportSize (const SceneInfo info, const Camera cam, CameraSpec *spec) 
 }
 
 void GetPixelDeltas (const SceneInfo info, const Camera cam, CameraSpec *spec) {
-    GetBasisVectors(info, cam, spec);
+    GetBasisVectors(cam, spec);
     spec->pixel_delta_right = vec3muls(spec->right, spec->viewport.x / info.ImageDimensions.x);
     spec->pixel_delta_down = vec3muls(spec->up, -spec->viewport.y / info.ImageDimensions.y);
 }
@@ -56,12 +54,12 @@ void GetFrameVectors (const Camera cam, CameraSpec *spec) {
     );
 }
 
-Ray GetRayOfPixel (const Camera cam, const CameraSpec *spec, const Vec2 offset, const int pixel_X, const int pixel_Y) {
-    const Vec3 right = vec3muls(spec->pixel_delta_right, pixel_X+offset.x);
-    const Vec3 down = vec3muls(spec->pixel_delta_down, pixel_Y+offset.y);
+Ray GetRayOfPixel (RenderInfo info, const Vec2 offset) {
+    const Vec3 right = vec3muls(info.spec->pixel_delta_right, info.x+offset.x);
+    const Vec3 down = vec3muls(info.spec->pixel_delta_down, info.y+offset.y);
     const Vec3 right_down = vec3add(right, down);
-    const Vec3 pos = vec3add(spec->top_left_pixel, right_down);
-    return (Ray) {cam.pos, vec3sub(pos, cam.pos)};
+    const Vec3 pos = vec3add(info.spec->top_left_pixel, right_down);
+    return (Ray) {info.cam->pos, vec3sub(pos, info.cam->pos)};
 }
 
 void Camera_DoAll (const SceneInfo info, const Camera cam, CameraSpec *spec) {
