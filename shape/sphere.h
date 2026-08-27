@@ -12,7 +12,6 @@
 typedef struct {
     Vec3 origin;
     double radius;
-    Material mat;
 } Sphere;
 
 double RayHitsSphere (Sphere s, Ray r);

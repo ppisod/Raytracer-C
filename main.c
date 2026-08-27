@@ -12,6 +12,7 @@
 #include "shape/shape.h"
 #include "shape/sphere.h"
 #include "utility/util.h"
+#include "thread/thread_main.h"
 
 static const int Width = 600;
 static const int Height = 400;
@@ -24,28 +25,6 @@ Pixel DefaultImage_GetPixel (const int x, const int y, const int w, const int h)
 }
 
 // Main functions
-int WriteFile (const SceneInfo info, const List *scene, const Camera cam, CameraSpec *spec) {
-
-    FILE *f = fopen ("out.ppm", "w");
-    if (!f) {perror("fopen failed"); return 1;}
-
-    fprintf(f, "P3\n%d %d\n255\n", Width, Height);
-
-    for (int y = 0; y < Height; y++) {
-        for (int x = 0; x < Width; x++) {
-
-            const RenderInfo parameters = {x, y, &info, scene, &cam, spec};
-
-            const Pixel p = Render(parameters);
-            fprintf(f, "%d %d %d \n", p.r, p.g, p.b);
-
-        }
-    }
-
-    fclose(f);
-
-    return 0;
-}
 
 int main(void) {
     const Camera cam = (Camera) {(Vec3) {0.7, 0.7, 0.7}, (Vec3) {0, 0, 0}, 90};
@@ -70,5 +49,5 @@ int main(void) {
         sizeof(scene)/sizeof(scene[0])
     };
 
-    return WriteFile(info, &list, cam, &spec);
+    return WriteFile(Width, Height, info, &list, cam, &spec);
 }

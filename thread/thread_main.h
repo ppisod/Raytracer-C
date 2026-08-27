@@ -5,6 +5,8 @@
 #ifndef RAYTRACER_THREAD_MAIN_H
 #define RAYTRACER_THREAD_MAIN_H
 
-int main_threaded(void);
+#include "../scene/scene_types.h"
+
+int WriteFile (int w, int h, SceneInfo info, const List *scene, Camera cam, CameraSpec *spec);
 
 #endif //RAYTRACER_THREAD_MAIN_H
