@@ -19,6 +19,7 @@ typedef struct {
     const List *scene;
     const Camera *cam;
     const CameraSpec *spec;
+    int depth;
 } ThreadConfig;
 
 void *RenderRows(void *arg) {
@@ -29,7 +30,7 @@ void *RenderRows(void *arg) {
 
     for (int y = conf->thread_num % conf->threads; y < conf->h; y += conf->threads) {
         for (int x = 0; x < conf->w; x++) {
-            const RenderInfo r = {x, y, conf->info, conf->scene, conf->cam, conf->spec};
+            const RenderInfo r = {x, y, conf->depth, conf->info, conf->scene, conf->cam, conf->spec};
             conf->buffer[y * conf->w + x] = Render(r);
         }
         if (conf->thread_num == 1) {
@@ -40,9 +41,7 @@ void *RenderRows(void *arg) {
     return NULL;
 }
 
-int WriteFile (const int w, const int h, const SceneInfo info, const List *scene, const Camera cam, CameraSpec *spec) {
-
-    int num_threads = 10;
+int WriteFile (const int threads, const int w, const int h, const int depth, const SceneInfo info, const List *scene, const Camera cam, CameraSpec *spec) {
 
     FILE *f = fopen ("out.ppm", "w");
     if (!f) {perror("fopen failed"); return 1;}
@@ -66,7 +65,8 @@ int WriteFile (const int w, const int h, const SceneInfo info, const List *scene
         configs[thr] = (ThreadConfig) {
             .w = w, .h = h, .thread_num = thr+1, .threads = num_threads,
             .buffer = buffer,
-            .info = &info, .scene = scene, .cam=&cam, .spec=spec
+            .info = &info, .scene = scene, .cam=&cam, .spec=spec,
+            .depth = depth
         };
 
         pthread_create(&threads[thr], NULL, RenderRows, &configs[thr]);

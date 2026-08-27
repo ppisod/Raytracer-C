@@ -1,12 +1,14 @@
 # A raytracer in C
 ## Current features
 - Plane & Sphere objects w sky background
-- Materials
+- Basic materials: lambertian, metal
 - Anti-aliasing
+- Threaded execution
 
 ## Planned features
-- Optimizing and using threads
 - Image textures
+- scene file description
+- preview UI with Clay and RayLib
 
 ## Why
 Learn C and low level mechanics

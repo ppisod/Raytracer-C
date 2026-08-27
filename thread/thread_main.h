@@ -7,6 +7,6 @@
 
 #include "../scene/scene_types.h"
 
-int WriteFile (int w, int h, SceneInfo info, const List *scene, Camera cam, CameraSpec *spec);
+int WriteFile (int threads, int w, int h, int depth, SceneInfo info, const List *scene, Camera cam, CameraSpec *spec);
 
 #endif //RAYTRACER_THREAD_MAIN_H

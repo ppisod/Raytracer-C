@@ -50,6 +50,7 @@ typedef struct {
 
 typedef struct {
     const int x, y;
+    const int depth;
     const SceneInfo *info;
     const List *scene;
     const Camera *cam;

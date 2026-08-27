@@ -1,0 +1,17 @@
+--- Parameters
+Width: 600
+Height: 400
+AntiAliasSamples: 60
+Depth: 5
+Threads: 10
+
+--- Materials
+Material "Lambertian": MaterialType[Mat_Lambertian], Albedo[0.6, 0.7, 0.9], Fuzz[0]
+Material "Metal": MaterialType[Mat_Metal], Albedo[0.8,0.8,0.8], Fuzz[0]
+
+--- Scene
+Camera: Position[0.7,0.7,0.7], LookingAt[0,0,0], FOV[90]
+Shape: Material["Lambertian"], Sphere[Origin[0,0,0],Radius[0.5]]
+Shape: Material["Metal"], Sphere[Origin[1,-3,0],Radius[3]]
+Shape: Material["Lambertian"], Sphere[Origin[0,-105,0],Radius[100]]
+Shape: Material["Metal"], Plane[Origin[0,0,0],Normal[0.7,0.3,0.2],Rad[0.9]]
